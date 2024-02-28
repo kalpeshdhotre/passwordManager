@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { Admin, ClientList, CredentialDB } from "./db";
+import { Admin, ClientList, CredentialDB } from "./db/db";
 import { router } from "./routes/addClient";
 // const { Admin, ClientList, CredentialDB } = require("./db");
 

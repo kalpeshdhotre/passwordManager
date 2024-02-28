@@ -8,11 +8,11 @@ const AdminSchema = new mongoose.Schema({
 });
 
 const ClientListSchema = new mongoose.Schema({
-   phoneNumber: Number,
+   phoneNumber: { type: Number, unique: true },
    email: String,
    clientName: String,
    companyName: String,
-   Address: String,
+   address: String,
    panNo: String,
    gstNo: String,
 });

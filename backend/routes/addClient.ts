@@ -1,6 +1,6 @@
 import express from "express";
 import { z } from "zod";
-import { ClientList } from "../db";
+import { ClientList } from "../db/db";
 const router = express.Router();
 
 const clientSchema = z.object({
@@ -23,7 +23,7 @@ router.post("/addclient", async (req, res) => {
          email: data.email,
          clientName: data.clientName,
          companyName: data.companyName,
-         Address: data.Address,
+         address: data.Address,
          panNo: data.panNo,
          gstNo: data.gstNo,
       });
