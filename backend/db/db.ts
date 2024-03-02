@@ -1,16 +1,18 @@
 import mongoose from "mongoose";
+import { string } from "zod";
 
 mongoose.connect("mongodb://localhost:27017/passwordManagerDB");
 
-const AdminSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
    username: String,
    password: String,
+   role: String,
 });
 
 const ClientListSchema = new mongoose.Schema({
-   phoneNumber: { type: Number, unique: true },
+   phoneNumber: String,
    email: String,
-   clientName: String,
+   clientName: { type: String, unique: true },
    companyName: String,
    address: String,
    panNo: String,
@@ -33,8 +35,8 @@ const CredentialDBSchema = new mongoose.Schema({
    editedOn: Date,
 });
 
-const Admin = mongoose.model("Admin", AdminSchema);
+const User = mongoose.model("User", UserSchema);
 const ClientList = mongoose.model("ClientList", ClientListSchema);
 const CredentialDB = mongoose.model("CredentialDB", CredentialDBSchema);
 
-export { Admin, ClientList, CredentialDB };
+export { User, ClientList, CredentialDB };
