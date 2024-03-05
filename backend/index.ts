@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import { User, ClientList, CredentialDB } from "./db/db";
 import { clientRouter } from "./routes/clientOps";
 import { userRouter } from "./routes/users";
+import { credentialRouter } from "./routes/credential";
 const cors = require("cors");
 // const { Admin, ClientList, CredentialDB } = require("./db");
 
@@ -13,6 +14,7 @@ const PORT: number = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use("/credential", credentialRouter);
 app.use("/client", clientRouter);
 app.use("/user", userRouter);
 

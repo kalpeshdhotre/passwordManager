@@ -79,4 +79,11 @@ clientRouter.put("/editclient", async (req, res) => {
    }
 });
 
+clientRouter.get("/getall", async (req, res) => {
+   try {
+      const allClient = await ClientList.find();
+      res.send({ message: "All Clients", data: allClient });
+      // res.send({ allClient });
+   } catch (error) {}
+});
 export { clientRouter };

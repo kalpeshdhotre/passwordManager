@@ -20,9 +20,9 @@ userRouter.post("/signup", async (req, res) => {
             password: data.password,
             role: data.role,
          });
-         res.send({ message: "User Created successfully" });
+         res.send({ message: "User created successfully" });
       } else {
-         res.send({ message: "User Creation failed" });
+         res.send({ message: "User creation failed" });
       }
    } catch (error) {
       res.status(400).send({ message: "User Creatation unknown error" });

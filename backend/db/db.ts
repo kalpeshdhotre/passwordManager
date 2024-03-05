@@ -23,6 +23,7 @@ const CredentialDBSchema = new mongoose.Schema({
    companyName: String,
    entityType: String,
    keyPerson: {
+      name: String,
       designation: String,
       mobileNumber: Number,
    },
