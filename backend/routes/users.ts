@@ -4,7 +4,7 @@ import { User } from "../db/db";
 const userRouter = express.Router();
 
 const userSchema = z.object({
-   username: z.string(),
+   emailAsUsername: z.string(),
    password: z.string(),
    role: z.string(),
 });
@@ -16,7 +16,7 @@ userRouter.post("/signup", async (req, res) => {
       const validateLoginData = userSchema.parse(data);
       if (validateLoginData) {
          await User.create({
-            username: data.username,
+            emailAsUsername: data.emailAsUsername,
             password: data.password,
             role: data.role,
          });
@@ -30,15 +30,17 @@ userRouter.post("/signup", async (req, res) => {
 });
 
 userRouter.post("/checkusername", async (req, res) => {
-   const { username } = req.body;
+   const { emailAsUsername } = req.body;
 
    try {
-      const existingUser = await User.findOne({ username });
+      const existingUser = await User.findOne({ emailAsUsername });
       const isUnique = !existingUser;
       res.json({ isUnique });
    } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
    }
 });
+
+// Signin Route is pending
 
 export { userRouter };

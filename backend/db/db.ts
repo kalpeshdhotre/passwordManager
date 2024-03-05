@@ -4,36 +4,31 @@ import { string } from "zod";
 mongoose.connect("mongodb://localhost:27017/passwordManagerDB");
 
 const UserSchema = new mongoose.Schema({
-   username: String,
+   emailAsUsername: String,
    password: String,
-   role: String,
 });
 
 const ClientListSchema = new mongoose.Schema({
+   companyName: String,
    phoneNumber: String,
    email: String,
-   clientName: { type: String, unique: true },
-   companyName: String,
+   clientName: String,
    address: String,
-   panNo: String,
    gstNo: String,
+   panNo: String,
+   tanNo: String,
 });
 
 const CredentialDBSchema = new mongoose.Schema({
-   companyName: String,
-   entityType: String,
-   keyPerson: {
-      name: String,
-      designation: String,
-      mobileNumber: Number,
-   },
+   clientID: String,
+   personName: String,
+   personDesignation: String,
+   personMobileNumber: String,
    credentialTitle: String,
+   credentialRegNumber: String,
    loginLink: String,
    userName: String,
    password: String,
-   createdOn: Date,
-   createdBy: String,
-   editedOn: Date,
 });
 
 const User = mongoose.model("User", UserSchema);

@@ -4,13 +4,14 @@ import { ClientList } from "../db/db";
 const clientRouter = express.Router();
 
 const clientSchema = z.object({
+   companyName: z.string(),
    phoneNumber: z.string().min(10),
    email: z.string().email(),
    clientName: z.string(),
-   companyName: z.string(),
    Address: z.string(),
-   panNo: z.string(),
    gstNo: z.string(),
+   panNo: z.string(),
+   tanNo: z.string(),
 });
 
 clientRouter.post("/addclient", async (req, res) => {
@@ -19,13 +20,14 @@ clientRouter.post("/addclient", async (req, res) => {
       const validationRsult = clientSchema.parse(data);
 
       await ClientList.create({
+         companyName: data.companyName,
          phoneNumber: data.phoneNumber,
          email: data.email,
          clientName: data.clientName,
-         companyName: data.companyName,
          address: data.Address,
-         panNo: data.panNo,
          gstNo: data.gstNo,
+         panNo: data.panNo,
+         tanNo: data.tanNo,
       });
 
       res.send({ message: "Data Verified & added to DB", data: validationRsult });
@@ -34,11 +36,13 @@ clientRouter.post("/addclient", async (req, res) => {
    }
 });
 
+// modify below route to delete client with id as identifier
 clientRouter.delete("/deleteclient", async (req, res) => {
-   const clientToDelete = req.body.clientName;
+   const idToDelete = req.body.id;
+
    try {
       const deletedClient = await ClientList.findOneAndDelete({
-         clientName: clientToDelete,
+         _id: idToDelete,
       });
       if (deletedClient) {
          res.status(200).send({ message: "Delete scuessful" });
@@ -51,21 +55,22 @@ clientRouter.delete("/deleteclient", async (req, res) => {
 });
 
 clientRouter.put("/editclient", async (req, res) => {
-   const clientToEdit = req.body.clientName;
+   const idToEdit = req.body.id;
    const data = req.body;
    try {
       const editedClient = await ClientList.findOneAndUpdate(
          {
-            clientName: clientToEdit,
+            _id: idToEdit,
          },
          {
             phoneNumber: data.phoneNumber,
             email: data.email,
-            // clientName: data.clientName,
+            clientName: data.clientName,
             companyName: data.companyName,
             address: data.Address,
             panNo: data.panNo,
             gstNo: data.gstNo,
+            tanNo: data.tanNo,
          },
          { new: true }
       );
@@ -84,6 +89,8 @@ clientRouter.get("/getall", async (req, res) => {
       const allClient = await ClientList.find();
       res.send({ message: "All Clients", data: allClient });
       // res.send({ allClient });
-   } catch (error) {}
+   } catch (error) {
+      res.send({ message: "Error fetching records!" });
+   }
 });
 export { clientRouter };
