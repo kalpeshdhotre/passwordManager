@@ -4,20 +4,15 @@ import { CredentialDB } from "../db/db";
 const credentialRouter = express.Router();
 
 const credentialSchema = z.object({
-   companyName: z.string(),
-   entityType: z.string(),
-   keyPerson: z.object({
-      name: z.string(),
-      designation: z.string(),
-      mobileNumber: z.number(),
-   }),
+   clientID: z.string(),
+   personName: z.string(),
+   personDesignation: z.string(),
+   personMobileNumber: z.string(),
    credentialTitle: z.string(),
+   credentialRegNumber: z.string(),
    loginLink: z.string(),
    userName: z.string(),
    password: z.string(),
-   createdOn: z.coerce.date(),
-   createdBy: z.string(),
-   editedOn: z.coerce.date(),
 });
 
 // Add Route to add new credential details
@@ -27,36 +22,29 @@ credentialRouter.post("/add", async (req, res) => {
    try {
       const validatedData = credentialSchema.parse(data);
       await CredentialDB.create({
-         companyName: validatedData.companyName,
-         entityType: validatedData.entityType,
-         keyPerson: {
-            name: validatedData.keyPerson.name,
-            designation: validatedData.keyPerson.designation,
-            mobileNumber: validatedData.keyPerson.mobileNumber,
-         },
+         clientID: validatedData.clientID,
+         personName: validatedData.personName,
+         personDesignation: validatedData.personDesignation,
+         personMobileNumber: validatedData.personMobileNumber,
          credentialTitle: validatedData.credentialTitle,
+         credentialRegNumber: validatedData.credentialRegNumber,
          loginLink: validatedData.loginLink,
          userName: validatedData.userName,
          password: validatedData.password,
-         createdOn: validatedData.createdOn,
-         createdBy: validatedData.createdBy,
-         editedOn: validatedData.editedOn,
       });
-
       res.send({ message: "Record added succesfully" });
    } catch (error) {
       console.log(error);
-
       res.status(400).send({ message: "Check Data sent" });
    }
 });
 
 // get Route to fetch all credential details
 credentialRouter.get("/get", async (req, res) => {
-   const { companyName } = req.body;
+   const id = req.body.id;
    try {
       const allRecords = await CredentialDB.find({
-         companyName,
+         clientID: id,
       });
       res.send(allRecords);
    } catch (error) {
@@ -75,25 +63,20 @@ credentialRouter.put("/edit", async (req, res) => {
          },
          {
             $set: {
-               entityType: data.entityType,
-               keyPerson: {
-                  name: data.keyPerson.name,
-                  designation: data.keyPerson.designation,
-                  mobileNumber: data.keyPerson.mobileNumber,
-               },
+               personName: data.personName,
+               personDesignation: data.personDesignation,
+               personMobileNumber: data.personMobileNumber,
                credentialTitle: data.credentialTitle,
+               credentialRegNumber: data.credentialRegNumber,
                loginLink: data.loginLink,
                userName: data.userName,
                password: data.password,
-               createdOn: data.createdOn,
-               createdBy: data.createdBy,
-               editedOn: data.editedOn,
             },
          },
          { upsert: false, returnOriginal: false }
       )) as { value: any };
 
-      if (result && result.value) {
+      if (result) {
          res.send({ message: "Record Updated" });
       } else {
          res.send({ message: "Record Not Found" });
@@ -103,3 +86,15 @@ credentialRouter.put("/edit", async (req, res) => {
    }
 });
 export { credentialRouter };
+
+// Delete router
+credentialRouter.delete("/delete", async (req, res) => {
+   const id = req.body.id;
+
+   try {
+      await CredentialDB.findOneAndDelete({ _id: id });
+      res.send({ message: "Delete Success" });
+   } catch (error) {
+      res.send({ message: "Error" });
+   }
+});

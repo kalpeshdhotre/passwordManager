@@ -1,12 +1,15 @@
 import "./App.css";
-import Login from "./component/Login";
+import Signup from "./component/Signup";
+import Signin from "./component/Signin";
 import Dashboard from "./component/Dashboard";
+import Navigation from "./component/Navigation";
 
 function App() {
    return (
       <>
-         {/* <Login /> */}
-         <Dashboard />
+         <Signin />
+         {/* <Navigation /> */}
+         {/* <Dashboard /> */}
       </>
    );
 }

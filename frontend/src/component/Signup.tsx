@@ -1,26 +1,12 @@
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
 
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-export default function Login() {
-   const [username, setUsername] = useState("");
+export default function Signup() {
+   const [emailAsUsername, setEmailAsUsername] = useState("");
    const [password, setPassword] = useState("");
 
    const getUserName = (e: ChangeEvent<HTMLInputElement>) => {
-      setUsername(e.target.value);
+      setEmailAsUsername(e.target.value);
    };
 
    const getPassword = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,16 +15,16 @@ export default function Login() {
 
    async function displayInfo(e: ChangeEvent<HTMLInputElement>) {
       e.preventDefault();
-      console.log(username);
+      console.log(emailAsUsername);
       console.log(password);
-      const response = await axios.post("http://localhost:3000/user/checkusername", { username });
+      const response = await axios.post("http://localhost:3000/user/checkusername", { emailAsUsername: emailAsUsername });
 
       if (response.data.isUnique) {
          console.log(`username is unique ${response.data.isUnique}`);
-         await axios.post("http://localhost:3000/user/signup", { username, password, role: "admin" });
+         await axios.post("http://localhost:3000/user/signup", { emailAsUsername: emailAsUsername, password: password });
          console.log(`Signup successful`);
       } else {
-         console.log(`username already exist ${response.data.isUnique}`);
+         console.log(`username already exist cannot create new ${response.data.isUnique}`);
          alert("username already exist");
       }
 
@@ -59,7 +45,7 @@ export default function Login() {
                         User name
                      </label>
                      <div className="mt-2">
-                        <input onChange={getUserName} id="username" name="username" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <input onChange={getUserName} id="username" name="username" required className="p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                      </div>
                   </div>
 
@@ -70,7 +56,7 @@ export default function Login() {
                         </label>
                      </div>
                      <div className="mt-2">
-                        <input onChange={getPassword} id="password" name="password" type="password" autoComplete="current-password" required className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <input onChange={getPassword} id="password" name="password" type="password" autoComplete="current-password" required className="p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                      </div>
                   </div>
 

@@ -6,10 +6,9 @@ const userRouter = express.Router();
 const userSchema = z.object({
    emailAsUsername: z.string(),
    password: z.string(),
-   role: z.string(),
 });
 
-//
+// Signup route
 userRouter.post("/signup", async (req, res) => {
    const data = req.body;
    try {
@@ -18,7 +17,6 @@ userRouter.post("/signup", async (req, res) => {
          await User.create({
             emailAsUsername: data.emailAsUsername,
             password: data.password,
-            role: data.role,
          });
          res.send({ message: "User created successfully" });
       } else {
@@ -29,18 +27,42 @@ userRouter.post("/signup", async (req, res) => {
    }
 });
 
+// Check username for uniqueness for signup
 userRouter.post("/checkusername", async (req, res) => {
-   const { emailAsUsername } = req.body;
+   const userName = req.body.emailAsUsername;
+   console.log(userName);
 
    try {
-      const existingUser = await User.findOne({ emailAsUsername });
+      const existingUser = await User.findOne({ emailAsUsername: userName });
       const isUnique = !existingUser;
-      res.json({ isUnique });
+
+      res.json({ message: "Success", isUnique });
    } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
    }
 });
 
-// Signin Route is pending
+// Signin Route
+userRouter.post("/signin", async (req, res) => {
+   const data = req.body;
+   console.log(data);
+
+   try {
+      const signInSucess = await User.findOne({
+         emailAsUsername: data.emailAsUsername,
+         password: data.password,
+      });
+
+      console.log(signInSucess);
+
+      if (signInSucess) {
+         res.send({ message: "success" });
+      } else {
+         res.send({ message: "failed" });
+      }
+   } catch (error) {
+      res.send({ message: "signin error occured" });
+   }
+});
 
 export { userRouter };

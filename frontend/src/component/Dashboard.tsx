@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import DataTable from "react-data-table-component";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
@@ -14,6 +15,27 @@ interface clientList {
    gstNo: string;
 }
 
+const CustomCopyCell = ({ value }) => {
+   const [isCopied, setIsCopied] = useState(false);
+
+   const copyToClipboard = () => {
+      navigator.clipboard.writeText(value);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 500); // Reset copied state after 2 seconds
+   };
+
+   return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+         <span>{value}</span>
+         <span className="text-xl" style={{ marginLeft: 5, cursor: "pointer" }} onClick={copyToClipboard} title="Copy to Clipboard">
+            <FontAwesomeIcon icon={faCopy} style={{ marginLeft: 5, cursor: "pointer" }} onClick={copyToClipboard} title="Copy to Clipboard" />
+            {/* &#x2398;  */}
+         </span>
+         {isCopied && <span style={{ marginLeft: 5, color: "green" }}>Copied!</span>}
+      </div>
+   );
+};
+
 export default function Dashboard() {
    const [data, setData] = useState<clientList[]>([]);
 
@@ -25,41 +47,44 @@ export default function Dashboard() {
       getData();
    }, []);
 
+   const columns = [
+      {
+         name: "Name",
+         selector: (row) => row.companyName,
+      },
+      {
+         name: "Phone",
+         selector: (row) => row.phoneNumber,
+      },
+      {
+         name: "Email",
+         selector: (row) => row.email,
+         cell: (row) => <CustomCopyCell value={row.email} />,
+      },
+      {
+         name: "Address",
+         selector: (row) => row.address,
+      },
+      {
+         name: "GST",
+         selector: (row) => row.gstNo,
+      },
+      {
+         name: "PAN",
+         selector: (row) => row.panNo,
+      },
+      {
+         name: "TAN",
+         selector: (row) => row.tanNo,
+      },
+   ];
+
+   // component to display client credentials list
    return (
-      <div className="mt-10 flex flex-col h-max items-center justify-center">
-         <table className="border border-black">
-            <thead className="border border-black">
-               <tr>
-                  <th className="w-36 text-left border border-black pl-1">Client Name</th>
-                  <th className="w-36 text-left border border-black pl-1">Entiry</th>
-                  <th className="w-36 text-left border border-black pl-1">Contact Person</th>
-                  <th className="w-36 text-left border border-black pl-1">Mobile</th>
-                  <th className="w-36 text-left border border-black pl-1">Login Of</th>
-                  <th className="w-36 text-left border border-black pl-1">Username</th>
-                  <th className="w-6 text-left border border-black pl-1"></th>
-                  <th className="w-36 text-left border border-black pl-1">Password</th>
-               </tr>
-            </thead>
-            <tbody>
-               {data.map((item, index) => (
-                  <tr key={index}>
-                     <td className="w-36 text-left border border-black pl-1">{item.clientName}</td>
-                     <td className="w-36 text-left border border-black pl-1">{item.clientName}</td>
-                     <td className="w-36 text-left border border-black pl-1">{item.companyName}</td>
-                     <td className="w-36 text-left border border-black pl-1">{item.phoneNumber}</td>
-                     <td className="w-36 text-left border border-black pl-1">PAN</td>
-                     <td className="w-36 text-left border-t border-l border-b border-black pl-1">{item.email}</td>
-                     <td className="w-6 text-left border-b border-black p-2">
-                        <FontAwesomeIcon icon={faCopy} />
-                     </td>
-                     <td className="w-36 text-left border-t border-l border-b border-black border-black pl-1">{item.gstNo}</td>
-                     <td className="w-6 text-left border-b border-black p-2">
-                        <FontAwesomeIcon className="hover:text-cyan-400" onClick={() => navigator.clipboard.writeText(item.gstNo)} icon={faCopy} />
-                     </td>
-                  </tr>
-               ))}
-            </tbody>
-         </table>
+      <div className="flex justify-center">
+         <div className="mt-10 w-5/6">
+            <DataTable className="flex justify-center w-auto" columns={columns} data={data} selectableRows theme="dark" />;
+         </div>
       </div>
    );
 }
