@@ -1,9 +1,11 @@
 import { ChangeEvent, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Signin() {
    const [emailAsUsername, setEmailAsUsername] = useState("");
    const [password, setPassword] = useState("");
+   const navigate = useNavigate();
 
    const getUserName = (e: ChangeEvent<HTMLInputElement>) => {
       setEmailAsUsername(e.target.value);
@@ -22,6 +24,7 @@ export default function Signin() {
 
       if (response.data.message == "success") {
          console.log(`Login success`);
+         navigate("/dashboard");
       } else {
          console.log(`Check username password`);
       }

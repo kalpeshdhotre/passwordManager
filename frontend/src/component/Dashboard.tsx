@@ -13,9 +13,10 @@ interface clientList {
    address: string;
    panNo: string;
    gstNo: string;
+   tanNo: string;
 }
 
-const CustomCopyCell = ({ value }) => {
+const CustomCopyCell = ({ value }: { value: string }) => {
    const [isCopied, setIsCopied] = useState(false);
 
    const copyToClipboard = () => {
@@ -50,32 +51,32 @@ export default function Dashboard() {
    const columns = [
       {
          name: "Name",
-         selector: (row) => row.companyName,
+         selector: (row: clientList) => row.companyName,
       },
       {
          name: "Phone",
-         selector: (row) => row.phoneNumber,
+         selector: (row: clientList) => row.phoneNumber,
       },
       {
          name: "Email",
-         selector: (row) => row.email,
-         cell: (row) => <CustomCopyCell value={row.email} />,
+         selector: (row: clientList) => row.email,
+         cell: (row: clientList) => <CustomCopyCell value={row.email} />,
       },
       {
          name: "Address",
-         selector: (row) => row.address,
+         selector: (row: clientList) => row.address,
       },
       {
          name: "GST",
-         selector: (row) => row.gstNo,
+         selector: (row: clientList) => row.gstNo,
       },
       {
          name: "PAN",
-         selector: (row) => row.panNo,
+         selector: (row: clientList) => row.panNo,
       },
       {
          name: "TAN",
-         selector: (row) => row.tanNo,
+         selector: (row: clientList) => row.tanNo,
       },
    ];
 
